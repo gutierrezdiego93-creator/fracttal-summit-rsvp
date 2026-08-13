@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@vercel/kv": "^3.0.0",
+    "exceljs": "^4.4.0",
     "flag-icons": "^7.2.3",
     "next": "^15.3.0",
     "react": "^19.0.0",

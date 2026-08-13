@@ -1,49 +1,95 @@
-import { kv } from "@vercel/kv";
+import { getRegistros, type Registro } from "./data";
 
 export const dynamic = "force-dynamic";
 
-type Registro = {
-  nombre: string;
-  empresa: string;
-  correo: string;
-  cargo: string;
-  fecha: string;
-};
+export default async function AdminPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ from?: string; to?: string }>;
+}) {
+  const { from, to } = await searchParams;
 
-function parseRegistro(raw: unknown): Registro | null {
-  try {
-    const obj = typeof raw === "string" ? JSON.parse(raw) : raw;
-    if (obj && typeof obj === "object" && "nombre" in obj) {
-      return obj as Registro;
-    }
-    return null;
-  } catch {
-    return null;
-  }
-}
-
-export default async function AdminPage() {
   let registros: Registro[] = [];
   let error = false;
 
   try {
-    const raw = await kv.lrange("rsvp:summit", 0, -1);
-    registros = raw
-      .map(parseRegistro)
-      .filter((r): r is Registro => r !== null)
-      .reverse();
+    registros = await getRegistros(from, to);
   } catch {
     error = true;
   }
 
+  const exportQuery = new URLSearchParams();
+  if (from) exportQuery.set("from", from);
+  if (to) exportQuery.set("to", to);
+  const exportHref = `/admin/export${
+    exportQuery.size > 0 ? `?${exportQuery.toString()}` : ""
+  }`;
+
+  const filtroActivo = Boolean(from || to);
+
   return (
     <main className="mx-auto max-w-5xl px-6 py-12">
-      <h1 className="text-3xl font-bold text-[#000D22]">
-        Asistentes confirmados
-      </h1>
-      <p className="mt-2 text-lg text-[#2929FF] font-bold">
-        Total: {registros.length}
-      </p>
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-[#000D22]">
+            Asistentes confirmados
+          </h1>
+          <p className="mt-2 text-lg font-bold text-[#2929FF]">
+            Total: {registros.length}
+            {filtroActivo && (
+              <span className="ml-2 text-sm font-normal text-[#000D22]/60">
+                (filtrado{from ? ` desde ${from}` : ""}
+                {to ? ` hasta ${to}` : ""})
+              </span>
+            )}
+          </p>
+        </div>
+
+        <a
+          href={exportHref}
+          className="rounded-lg bg-[#2929FF] px-5 py-3 font-bold text-white transition hover:bg-[#1f1fd6]"
+        >
+          Descargar Excel
+        </a>
+      </div>
+
+      <form
+        method="GET"
+        className="mt-8 flex flex-wrap items-end gap-4 rounded-xl bg-[#F5F6FA] p-5"
+      >
+        <label className="flex flex-col gap-1 text-sm font-bold text-[#000D22]">
+          Desde
+          <input
+            type="date"
+            name="from"
+            defaultValue={from}
+            className="rounded-lg border border-[#000D22]/20 bg-white px-3 py-2 font-normal text-[#000D22] outline-none focus:border-[#2929FF]"
+          />
+        </label>
+        <label className="flex flex-col gap-1 text-sm font-bold text-[#000D22]">
+          Hasta
+          <input
+            type="date"
+            name="to"
+            defaultValue={to}
+            className="rounded-lg border border-[#000D22]/20 bg-white px-3 py-2 font-normal text-[#000D22] outline-none focus:border-[#2929FF]"
+          />
+        </label>
+        <button
+          type="submit"
+          className="rounded-lg bg-[#000D22] px-5 py-2.5 font-bold text-white transition hover:bg-[#00081a]"
+        >
+          Filtrar
+        </button>
+        {filtroActivo && (
+          <a
+            href="/admin"
+            className="px-2 py-2.5 text-sm font-bold text-[#2929FF] underline"
+          >
+            Limpiar filtro
+          </a>
+        )}
+      </form>
 
       {error && (
         <p className="mt-6 text-red-600">
@@ -84,7 +130,9 @@ export default async function AdminPage() {
                   colSpan={5}
                   className="px-3 py-8 text-center text-[#000D22]/60"
                 >
-                  Aún no hay confirmaciones.
+                  {filtroActivo
+                    ? "No hay confirmaciones en ese periodo."
+                    : "Aún no hay confirmaciones."}
                 </td>
               </tr>
             )}
