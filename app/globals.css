@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+:root {
+  --navy: #000d22;
+  --electric: #2929ff;
+}
+
+body {
+  background: #ffffff;
+  color: var(--navy);
+  font-family: Arial, Helvetica, sans-serif;
+}
