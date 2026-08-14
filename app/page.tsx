@@ -14,14 +14,14 @@ export default function Home() {
         <img src="/logo.png" alt="Fracttal Partners" width={220} />
 
         <h1 className="mt-8 text-4xl font-bold text-[#000D22]">
-          Fracttal Partner Summit
+          Fracttal Partner Connect
         </h1>
         <p className="mt-3 text-lg text-[#000D22]/80">
           La primera cumbre estratégica del ecosistema de partners.
         </p>
 
         <p className="mt-6 inline-block rounded-full bg-[#2929FF] px-5 py-2 text-sm font-bold text-white">
-          Jueves 27 de agosto · Virtual · 1h 45min
+          Jueves 27 de agosto · Virtual · 1h 30min
         </p>
       </header>
 
@@ -49,7 +49,7 @@ export default function Home() {
       </section>
 
       <footer className="mt-16 border-t border-[#000D22]/10 pt-6 text-center text-sm text-[#000D22]/60">
-        Fracttal Partner Summit · Evento exclusivo para partners
+        Fracttal Partner Connect · Evento exclusivo para partners
       </footer>
     </main>
   );

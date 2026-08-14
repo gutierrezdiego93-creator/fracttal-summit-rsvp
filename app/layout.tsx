@@ -3,7 +3,7 @@ import "flag-icons/css/flag-icons.min.css";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Fracttal Partner Summit",
+  title: "Fracttal Partner Connect",
   description:
     "La primera cumbre estratégica del ecosistema de partners. Jueves 27 de agosto — evento virtual.",
 };
