@@ -38,6 +38,10 @@ export default function RsvpForm() {
         <p className="text-lg font-bold text-[#000D22]">
           ¡Listo! Tu asistencia quedó confirmada.
         </p>
+        <p className="mt-2 text-sm text-[#000D22]/80">
+          En los próximos días recibirás en tu correo el enlace de acceso a
+          la sesión.
+        </p>
         <p className="mt-1 text-sm text-[#000D22]/70">
           Nos vemos el jueves 27 de agosto.
         </p>
