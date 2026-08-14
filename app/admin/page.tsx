@@ -1,4 +1,5 @@
 import { getRegistros, type Registro } from "./data";
+import DeleteButton from "./DeleteButton";
 
 export const dynamic = "force-dynamic";
 
@@ -107,6 +108,7 @@ export default async function AdminPage({
               <th className="px-3 py-2">Correo</th>
               <th className="px-3 py-2">Cargo</th>
               <th className="px-3 py-2">Fecha</th>
+              <th className="px-3 py-2"></th>
             </tr>
           </thead>
           <tbody>
@@ -122,12 +124,20 @@ export default async function AdminPage({
                 <td className="px-3 py-2">
                   {r.fecha ? new Date(r.fecha).toLocaleString("es-MX") : "—"}
                 </td>
+                <td className="px-3 py-2 text-right">
+                  <DeleteButton
+                    idx={r.idx}
+                    fecha={r.fecha}
+                    correo={r.correo}
+                    nombre={r.nombre}
+                  />
+                </td>
               </tr>
             ))}
             {registros.length === 0 && !error && (
               <tr>
                 <td
-                  colSpan={5}
+                  colSpan={6}
                   className="px-3 py-8 text-center text-[#000D22]/60"
                 >
                   {filtroActivo

@@ -6,13 +6,15 @@ export type Registro = {
   correo: string;
   cargo: string;
   fecha: string;
+  /** Posición del registro en la lista de KV (para poder eliminarlo) */
+  idx: number;
 };
 
-function parseRegistro(raw: unknown): Registro | null {
+export function parseRegistro(raw: unknown): Omit<Registro, "idx"> | null {
   try {
     const obj = typeof raw === "string" ? JSON.parse(raw) : raw;
     if (obj && typeof obj === "object" && "nombre" in obj) {
-      return obj as Registro;
+      return obj as Omit<Registro, "idx">;
     }
     return null;
   } catch {
@@ -30,7 +32,10 @@ export async function getRegistros(
 ): Promise<Registro[]> {
   const raw = await kv.lrange("rsvp:summit", 0, -1);
   let registros = raw
-    .map(parseRegistro)
+    .map((item, idx) => {
+      const parsed = parseRegistro(item);
+      return parsed ? { ...parsed, idx } : null;
+    })
     .filter((r): r is Registro => r !== null);
 
   const fromTime = from ? new Date(`${from}T00:00:00`).getTime() : null;
