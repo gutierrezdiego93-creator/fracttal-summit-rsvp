@@ -35,11 +35,13 @@ export async function GET(request: Request) {
       empresa: r.empresa,
       correo: r.correo,
       cargo: r.cargo || "",
-      fecha: r.fecha ? new Date(r.fecha) : "",
+      fecha: r.fecha
+        ? new Date(r.fecha).toLocaleString("es-MX", {
+            timeZone: "America/Mexico_City",
+          })
+        : "",
     });
   }
-
-  sheet.getColumn("fecha").numFmt = "dd/mm/yyyy hh:mm";
 
   const buffer = await workbook.xlsx.writeBuffer();
 

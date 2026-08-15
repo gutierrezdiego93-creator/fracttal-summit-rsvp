@@ -122,7 +122,11 @@ export default async function AdminPage({
                 <td className="px-3 py-2">{r.correo}</td>
                 <td className="px-3 py-2">{r.cargo || "—"}</td>
                 <td className="px-3 py-2">
-                  {r.fecha ? new Date(r.fecha).toLocaleString("es-MX") : "—"}
+                  {r.fecha
+                    ? new Date(r.fecha).toLocaleString("es-MX", {
+                        timeZone: "America/Mexico_City",
+                      })
+                    : "—"}
                 </td>
                 <td className="px-3 py-2 text-right">
                   <DeleteButton
